@@ -1,0 +1,134 @@
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Monitor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Process Monitor</span>
+            <div class="d-flex">
+                <span class="navbar-text me-3" id="refreshStatus">
+                    Auto-refresh: <span class="badge bg-success">ON</span>
+                </span>
+                <button class="btn btn-outline-light btn-sm" id="toggleRefresh">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Process List</h5>
+                        <div class="input-group input-group-sm w-50">
+                            <input type="text" class="form-control" id="processFilter"
+                                placeholder="Filter by process name...">
+                            <span class="input-group-text">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="processTable">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable" data-sort="pid">PID <i class="fa fa-sort"></i></th>
+                                        <th class="sortable" data-sort="name">Process Name <i class="fa fa-sort"></i>
+                                        </th>
+                                        <th class="sortable" data-sort="cpu_percent">CPU % <i class="fa fa-sort"></i>
+                                        </th>
+                                        <th class="sortable" data-sort="memory_percent">MEM % <i class="fa fa-sort"></i>
+                                        </th>
+                                        <th class="sortable" data-sort="status">Status <i class="fa fa-sort"></i></th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="processTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-between">
+                        <div>
+                            <span id="processCount">0</span> processes
+                        </div>
+                        <div>
+                            Last updated: <span id="lastUpdate">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">System Resources</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">CPU Usage</label>
+                            <div class="progress">
+                                <div id="cpuBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small id="cpuText">0%</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Memory Usage</label>
+                            <div class="progress">
+                                <div id="memoryBar" class="progress-bar bg-success" role="progressbar"
+                                    style="width: 0%"></div>
+                            </div>
+                            <small id="memoryText">0%</small>
+                        </div>
+                        <div>
+                            <label class="form-label">Disk Usage</label>
+                            <div class="progress">
+                                <div id="diskBar" class="progress-bar bg-info" role="progressbar" style="width: 0%">
+                                </div>
+                            </div>
+                            <small id="diskText">0%</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Anomalies</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="anomalyList" class="list-group">
+                            <p class="text-muted text-center">No anomalies detected</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Monitor Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="settingsForm">
+                            <div class="mb-3">
+                                <label for="intervalInput" class="form-label">Update Interval (seconds)</label>
+                                <input type="number" class="form-control" id="intervalInput" min="1" value="5">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cpuThreshold" class="form-label">CPU Threshold (%)</label>
+                                <input type="number" class="form-control" id="cpuThreshold" min="1" max="100"
+                                    value="80">
+                            </div>
+                            <div class="mb-3">
+                                <label for="

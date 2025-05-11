@@ -1,0 +1,23 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.progress {
+    height: 20px;
+}
+
+.table th {
+    cursor: pointer;
+}
+
+.table th:hover {
+    background-color: #f1f1f1;
+}
+
+.card {
+    margin-bottom: 20px;
+}
